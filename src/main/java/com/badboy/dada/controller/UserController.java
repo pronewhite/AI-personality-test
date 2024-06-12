@@ -1,5 +1,7 @@
 package com.badboy.dada.controller;
 
+import com.badboy.dada.dao.UserDao;
+import com.badboy.dada.exception.BusinessException;
 import com.badboy.dada.model.vo.LoginUserVO;
 import com.badboy.dada.model.vo.UserVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,7 +11,6 @@ import com.badboy.dada.common.DeleteRequest;
 import com.badboy.dada.common.ErrorCode;
 import com.badboy.dada.common.ResultUtils;
 import com.badboy.dada.constant.UserConstant;
-import com.badboy.dada.exception.BusinessException;
 import com.badboy.dada.exception.ThrowUtils;
 import com.badboy.dada.model.dto.user.UserAddRequest;
 import com.badboy.dada.model.dto.user.UserLoginRequest;
@@ -25,9 +26,9 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,6 +50,9 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Autowired
+    private UserDao userDao;
 
     // region 登录相关
 
@@ -147,7 +151,7 @@ public class UserController {
         String defaultPassword = "12345678";
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + defaultPassword).getBytes());
         user.setUserPassword(encryptPassword);
-        boolean result = userService.save(user);
+        boolean result = userDao.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(user.getId());
     }
@@ -165,7 +169,7 @@ public class UserController {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean b = userService.removeById(deleteRequest.getId());
+        boolean b = userDao.removeById(deleteRequest.getId());
         return ResultUtils.success(b);
     }
 
@@ -185,7 +189,7 @@ public class UserController {
         }
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
-        boolean result = userService.updateById(user);
+        boolean result = userDao.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
@@ -203,7 +207,7 @@ public class UserController {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getById(id);
+        User user = userDao.getById(id);
         ThrowUtils.throwIf(user == null, ErrorCode.NOT_FOUND_ERROR);
         return ResultUtils.success(user);
     }
@@ -235,7 +239,7 @@ public class UserController {
             HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
-        Page<User> userPage = userService.page(new Page<>(current, size),
+        Page<User> userPage = userDao.page(new Page<>(current, size),
                 userService.getQueryWrapper(userQueryRequest));
         return ResultUtils.success(userPage);
     }
@@ -257,7 +261,7 @@ public class UserController {
         long size = userQueryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<User> userPage = userService.page(new Page<>(current, size),
+        Page<User> userPage = userDao.page(new Page<>(current, size),
                 userService.getQueryWrapper(userQueryRequest));
         Page<UserVO> userVOPage = new Page<>(current, size, userPage.getTotal());
         List<UserVO> userVO = userService.getUserVO(userPage.getRecords());
@@ -284,7 +288,7 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(userUpdateMyRequest, user);
         user.setId(loginUser.getId());
-        boolean result = userService.updateById(user);
+        boolean result = userDao.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }

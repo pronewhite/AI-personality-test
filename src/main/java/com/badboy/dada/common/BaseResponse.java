@@ -1,6 +1,8 @@
 package com.badboy.dada.common;
 
 import java.io.Serializable;
+
+import com.badboy.dada.model.enums.ErrorEnum;
 import lombok.Data;
 
 /**
@@ -29,5 +31,9 @@ public class BaseResponse<T> implements Serializable {
 
     public BaseResponse(ErrorCode errorCode) {
         this(errorCode.getCode(), null, errorCode.getMessage());
+    }
+
+    public BaseResponse(ErrorEnum errorEnum) {
+        this(errorEnum.getErrorCode(), null, errorEnum.getErrorMessage());
     }
 }

@@ -1,11 +1,12 @@
 package com.badboy.dada.common;
 
+import com.badboy.dada.model.enums.ErrorEnum;
+
 /**
  * 自定义错误码
  *
- 
  */
-public enum ErrorCode {
+public enum ErrorCode implements ErrorEnum {
 
     SUCCESS(0, "ok"),
     PARAMS_ERROR(40000, "请求参数错误"),
@@ -39,4 +40,13 @@ public enum ErrorCode {
         return message;
     }
 
+    @Override
+    public Integer getErrorCode() {
+        return this.code;
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return this.message;
+    }
 }

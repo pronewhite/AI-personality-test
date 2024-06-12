@@ -1,12 +1,10 @@
 # 公共配置文件
-# @author <a href="https://github.com/liyupi">程序员鱼皮</a>
-# @from <a href="https://yupi.icu">编程导航知识星球</a>
 spring:
   application:
-    name: springboot-init
+    name: badboy-dada
   # 默认 dev 环境
   profiles:
-    active: dev
+    active: test
   # 支持 swagger3
   mvc:
     pathmatch:
@@ -21,18 +19,18 @@ spring:
   # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/bbog
+    url: jdbc:mysql://localhost:3306/bbdada
     username: root
     password: badboy
   # Redis 配置
   # todo 需替换配置，然后取消注释
-#  redis:
-#    database: 1
-#    host: localhost
-#    port: 6379
-#    timeout: 5000
+  redis:
+    database: 1
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
 #    password: 123456
-  # Elasticsearch 配置
+  # Elasticsearch 置
   # todo 需替换配置，然后取消注释
 #  elasticsearch:
 #    uris: http://localhost:9200
@@ -80,3 +78,6 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.badboy.dada.controller
+
+zhipuai:
+  apiKey: e4e24d4ec18661d1f7ebafc550beb8e5.YPSzLlACNNNMZzUa

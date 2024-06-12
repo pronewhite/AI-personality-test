@@ -1,35 +1,42 @@
 package com.badboy.dada.exception;
 
-import com.badboy.dada.common.ErrorCode;
+import com.badboy.dada.model.enums.ErrorEnum;
+import lombok.Data;
 
 /**
- * 自定义异常类
- *
- 
+ * @author badboy
+ * @version 1.0
+ * Create by 2024/1/27 20:59
  */
-public class BusinessException extends RuntimeException {
+@Data
+public class BusinessException extends RuntimeException{
 
-    /**
-     * 错误码
-     */
-    private final int code;
+    public Integer code;
+    public String msg;
 
-    public BusinessException(int code, String message) {
-        super(message);
+    public BusinessException(Integer code, String msg) {
+        super(msg);
         this.code = code;
+        this.msg = msg;
     }
 
-    public BusinessException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.code = errorCode.getCode();
+
+
+    public BusinessException(String msg){
+        super(msg);
+        this.code = ExceptionResponseEnum.BUISSNESS_EXCEPTION.getErrorCode();
+        this.msg = msg;
     }
 
-    public BusinessException(ErrorCode errorCode, String message) {
-        super(message);
-        this.code = errorCode.getCode();
+    public BusinessException(ErrorEnum errorEnum){
+        super(errorEnum.getErrorMessage());
+        this.code = errorEnum.getErrorCode();
+        this.msg = errorEnum.getErrorMessage();
     }
 
-    public int getCode() {
-        return code;
+    public BusinessException(ErrorEnum errorEnum, String msg){
+        super(errorEnum.getErrorMessage());
+        this.code = ExceptionResponseEnum.BUISSNESS_EXCEPTION.getErrorCode();
+        this.msg = msg;
     }
 }

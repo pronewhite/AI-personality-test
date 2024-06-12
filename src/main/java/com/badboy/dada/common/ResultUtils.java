@@ -1,5 +1,7 @@
 package com.badboy.dada.common;
 
+import com.badboy.dada.model.enums.ErrorEnum;
+
 /**
  * 返回工具类
  *
@@ -26,6 +28,16 @@ public class ResultUtils {
      */
     public static BaseResponse error(ErrorCode errorCode) {
         return new BaseResponse<>(errorCode);
+    }
+
+    /**
+     * 失败
+     *
+     * @param errorCode
+     * @return
+     */
+    public static BaseResponse error(ErrorEnum errorEnum) {
+        return new BaseResponse<>(errorEnum);
     }
 
     /**
